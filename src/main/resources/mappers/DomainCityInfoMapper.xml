@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.domain.dao.mapper.DomainCityInfoMapper">
+    <update id="update" keyProperty="id" useGeneratedKeys="true">
+        UPDATE domain_city_info
+        <set>
+            <if test="requestParam.cityId != null">city_id = #{requestParam.cityId},</if>
+            <if test="requestParam.cityName != null">city_name = #{requestParam.cityName},</if>
+            <if test="requestParam.domainId != null">domain_id = #{requestParam.domainId},</if>
+            <if test="requestParam.domainName != null">domain_name = #{requestParam.domainName},</if>
+            <if test="requestParam.delFlag != null">del_flag = #{requestParam.delFlag},</if>
+            <if test="requestParam.createTime != null">create_time = #{requestParam.createTime},</if>
+            <if test="requestParam.updateTime != null">update_time = #{requestParam.updateTime},</if>
+        </set>
+        WHERE id = #{requestParam.id}
+    </update>
+    <update id="updateByCityId">
+        UPDATE domain_city_info
+        <set>
+            <if test="requestParam.cityName != null">city_name = #{requestParam.cityName},</if>
+            <if test="requestParam.domainId != null">domain_id = #{requestParam.domainId},</if>
+            <if test="requestParam.domainName != null">domain_name = #{requestParam.domainName},</if>
+            <if test="requestParam.delFlag != null">del_flag = #{requestParam.delFlag},</if>
+            <if test="requestParam.createTime != null">create_time = #{requestParam.createTime},</if>
+            <if test="requestParam.updateTime != null">update_time = #{requestParam.updateTime},</if>
+        </set>
+        WHERE city_id = #{requestParam.cityId}
+    </update>
+    <select id="queryList" parameterType="com.chen.domain.dao.entity.DomainCityInfoDO" resultType="com.chen.domain.dao.entity.DomainCityInfoDO">
+        select id,city_id,city_name,domain_id,domain_name,del_flag,create_time,update_time
+        from domain_city_info
+        <where>
+            <if test="requestParam.domainId != null ">
+                and domain_id = #{requestParam.domainId}
+            </if>
+            <if test="requestParam.delFlag != null and requestParam.delFlag != '' ">
+                and del_flag=#{requestParam.delFlag}
+            </if>
+            <if test="requestParam.cityName != null and requestParam.cityName != '' ">
+                and city_name like concat('%',#{requestParam.cityName},'%')
+            </if>
+            <if test="requestParam.cityId != null ">
+                and city_id=#{requestParam.cityId}
+            </if>
+        </where>
+    </select>
+    <select id="queryByDomainIdAndCityId" resultType="com.chen.domain.dao.entity.DomainCityInfoDO">
+        select id,city_id,city_name,domain_id,domain_name,del_flag,create_time,update_time
+        from domain_city_info
+        where city_id=#{requestParam.cityId}
+        and domain_id=#{requestParam.domainId}
+        and del_flag=#{requestParam.delFlag}
+    </select>
+    <delete id="delByIds" parameterType="arraylist" >
+        delete from domain_city_info
+        <where>
+            id in
+            <foreach collection="ids" item="id" open="(" close=")" separator=",">
+              #{id}
+            </foreach>
+        </where>
+    </delete>
+    <delete id="deleteByDomainId">
+        delete from domain_city_info
+        where domain_id=#{domainId}
+    </delete>
+    <insert id="insert" parameterType="com.chen.domain.dao.entity.DomainCityInfoDO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO domain_city_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="requestParam.id != null">id,</if>
+            <if test="requestParam.cityId != null">city_id,</if>
+            <if test="requestParam.cityName != null">city_name,</if>
+            <if test="requestParam.domainId != null">domain_id,</if>
+            <if test="requestParam.domainName != null">domain_name,</if>
+            <if test="requestParam.delFlag != null">del_flag,</if>
+            <if test="requestParam.createTime != null">create_time,</if>
+            <if test="requestParam.updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="requestParam.id != null">#{requestParam.id},</if>
+            <if test="requestParam.cityId != null">#{requestParam.cityId},</if>
+            <if test="requestParam.cityName != null">#{requestParam.cityName},</if>
+            <if test="requestParam.domainId != null">#{requestParam.domainId},</if>
+            <if test="requestParam.domainName != null">#{requestParam.domainName},</if>
+            <if test="requestParam.delFlag != null">#{requestParam.delFlag},</if>
+            <if test="requestParam.createTime != null">#{requestParam.createTime},</if>
+            <if test="requestParam.updateTime != null">#{requestParam.updateTime},</if>
+        </trim>
+    </insert>
+
+</mapper>

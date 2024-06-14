@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.domain.dao.mapper.AddressMapper">
+    <update id="update">
+        UPDATE address
+        <set>
+            <if test="requestParam.address != null">
+                address = #{requestParam.address},
+            </if>
+            <if test="requestParam.domainCityInfoId != null">
+                domain_city_info_id = #{requestParam.domainCityInfoId},
+            </if>
+            <if test="requestParam.cityId != null">
+                city_id = #{requestParam.cityId},
+            </if>
+            <if test="requestParam.cityName != null">
+                city_name = #{requestParam.cityName},
+            </if>
+            <if test="requestParam.delFlag != null">
+                del_flag = #{requestParam.delFlag},
+            </if>
+            <if test="requestParam.updateTime != null">
+                update_time = #{requestParam.updateTime},
+            </if>
+        </set>
+        WHERE id = #{requestParam.id}
+    </update>
+    <update id="updateByIds">
+        UPDATE address
+        <set>
+            <if test="requestParam.address != null">
+                address = #{requestParam.address},
+            </if>
+            <if test="requestParam.domainCityInfoId != null">
+                domain_city_info_id = #{requestParam.domainCityInfoId},
+            </if>
+            <if test="requestParam.cityId != null">
+                city_id = #{requestParam.cityId},
+            </if>
+            <if test="requestParam.cityName != null">
+                city_name = #{requestParam.cityName},
+            </if>
+            <if test="requestParam.delFlag != null">
+                del_flag = #{requestParam.delFlag},
+            </if>
+            <if test="requestParam.updateTime != null">
+                update_time = #{requestParam.updateTime},
+            </if>
+        </set>
+        WHERE id in
+        <foreach collection="ids" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </update>
+    <update id="updateByCityId">
+        UPDATE address
+        <set>
+            <if test="requestParam.address != null">
+                address = #{requestParam.address},
+            </if>
+            <if test="requestParam.domainCityInfoId != null">
+                domain_city_info_id = #{requestParam.domainCityInfoId},
+            </if>
+            <if test="requestParam.cityName != null">
+                city_name = #{requestParam.cityName},
+            </if>
+            <if test="requestParam.delFlag != null">
+                del_flag = #{requestParam.delFlag},
+            </if>
+            <if test="requestParam.updateTime != null">
+                update_time = #{requestParam.updateTime},
+            </if>
+        </set>
+        WHERE city_id=#{requestParam.cityId}
+    </update>
+
+    <select id="queryList" parameterType="com.chen.domain.dao.entity.AddressDO" resultType="com.chen.domain.dao.entity.AddressDO">
+        select id,address,domain_id,domain_city_info_id,city_id,city_name,del_flag,create_time,update_time
+        from address
+        <where>
+            <if test="requestParam.domainCityInfoId != null  ">
+                and domain_city_info_id=#{requestParam.domainCityInfoId}
+            </if>
+            <if test="requestParam.cityName != null and requestParam.cityName != '' ">
+                and city_name like concat('%',#{requestParam.cityName},'%')
+            </if>
+            <if test="requestParam.delFlag != null and requestParam.delFlag != '' ">
+                and del_flag=#{requestParam.delFlag}
+            </if>
+            <if test="requestParam.address != null and requestParam.address != '' ">
+                and address like concat('%',#{requestParam.address},'%')
+            </if>
+        </where>
+    </select>
+    <delete id="delByDomainCityInfoIds" parameterType="arraylist" >
+        delete from address
+        <where>
+            domain_city_info_id in
+               <foreach collection="delDomainCityInfoIds" item="domainCityInfoId" separator="," open="(" close=")">
+                   #{domainCityInfoId}
+               </foreach>
+        </where>
+    </delete>
+    <delete id="delByIds" parameterType="java.util.List">
+        delete from address
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteByDomainId">
+        delete from address
+        where domain_id=#{domainId}
+    </delete>
+    <insert id="batchSave" parameterType="java.util.List">
+        insert into address (address,domain_id, domain_city_info_id,city_id, city_name, del_flag, create_time, update_time)
+        values
+        <foreach collection="addressDOList" item="address" separator="," >
+            ( #{address.address},#{address.domainId}, #{address.domainCityInfoId},#{address.cityId}, #{address.cityName}, #{address.delFlag}, #{address.createTime}, #{address.updateTime})
+        </foreach>
+    </insert>
+
+</mapper>

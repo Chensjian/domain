@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.domain.dao.mapper.DomainMapper">
+
+    <insert id="insert" parameterType="com.chen.domain.dao.entity.DomainDO" useGeneratedKeys="true" keyProperty="id">
+        insert into domain(domain_name,del_flag,create_time,update_time)
+        values(#{domainName},#{delFlag},#{createTime},#{updateTime})
+    </insert>
+    <delete id="delete" parameterType="integer">
+        delete from domain
+        where id=#{id}
+    </delete>
+    <select id="queryList" parameterType="com.chen.domain.dto.req.DomainPageReqDTO" resultType="com.chen.domain.dao.entity.DomainDO">
+        select id, domain_name, del_flag, create_time, update_time
+        from domain
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="requestParam.delFlag != null and requestParam.delFlag != ''">
+                and del_flag = #{requestParam.delFlag}
+            </if>
+            <if test="requestParam.domainName != null and requestParam.domainName != ''">
+                and domain_name like concat('%', #{requestParam.domainName}, '%')
+            </if>
+            <if test="requestParam.beginTime != null and requestParam.beginTime != ''">
+                and create_time &gt;= #{requestParam.beginTime}
+            </if>
+            <if test="requestParam.endTime != null and requestParam.endTime != ''">
+                and create_time &lt;= #{requestParam.endTime}
+            </if>
+        </trim>
+    </select>
+    <select id="queryById" parameterType="com.chen.domain.dao.entity.DomainDO" resultType="com.chen.domain.dao.entity.DomainDO">
+        select id, domain_name, del_flag, create_time, update_time
+        from domain
+        where id=#{requestParam.id}
+        and del_flag=#{requestParam.delFlag}
+    </select>
+    <select id="queryByDomainName" resultType="com.chen.domain.dao.entity.DomainDO">
+        select id, domain_name, del_flag, create_time, update_time
+        from domain
+        where domain_name=#{domainName}
+    </select>
+    <update id="updateById" parameterType="com.chen.domain.dao.entity.DomainDO" keyProperty="id" useGeneratedKeys="true">
+        update domain
+        <set>
+            <if test="requestParam.domainName != null and requestParam.domainName != '' ">
+                domain_name=#{requestParam.domainName}
+            </if>
+        </set>
+        <where>
+            <if test="requestParam.id !=null ">
+                and id=#{requestParam.id}
+            </if>
+            <if test="requestParam.delFlag != null">
+                and del_flag=#{requestParam.delFlag}
+            </if>
+        </where>
+    </update>
+
+</mapper>
